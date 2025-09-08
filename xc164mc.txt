@@ -1,1 +1,59 @@
 
+Claro. El microcontrolador XC164 es un miembro de la familia de microcontroladores C166 de Infineon Technologies (anteriormente Siemens). Es un microcontrolador de 16 bits con un potente núcleo y periféricos integrados, diseñado para aplicaciones embebidas y automotrices.
+
+Debido a que es un componente más antiguo (aunque aún en uso en muchos sistemas legacy), la documentación oficial se encuentra en el archivo de Infineon.
+
+Enlace Directo al Manual de Instrucciones (Instruction Set)
+
+El documento principal que describe el conjunto de instrucciones se llama User Manual. Contiene no solo el set de instrucciones, sino también una descripción detallada de la arquitectura del núcleo, que es fundamental para entender cómo funcionan las instrucciones.
+
+Título del documento: XC164CM / XC167CM / XC164LM User Manual Número de documento:UM01001 (Este es el código clave para buscarlo) Versión:V2.0, 2005-09
+
+Enlace de descarga directa (desde el sitio oficial de Infineon): https://www.infineon.com/dgdl/Infineon-XC164CM-XC167CM-XC164LM-UM-v02_00-EN.pdf?fileId=db3a304412b407950112b409f0c2000a
+
+Este manual tiene un capítulo completo (el Capítulo 4) dedicado al Set of Instructions, que incluye:
+
+· Formatos de las instrucciones.
+· Modos de direccionamiento.
+· Una lista alfabética completa de todas las instrucciones.
+· Descripción detallada de cada instrucción (operación, flags afectados, ciclos de reloj, sintaxis, etc.).
+
+---
+
+Otra Documentación Esencial
+
+Para trabajar con el XC164, también necesitarás otros manuales:
+
+1. Data Sheet (Hoja de Datos):
+   · Título: XC164CM / XC167CM / XC164LM Data Sheet
+   · Número: XC164-DS-v02_00-EN
+   · Contenido: Describe las características eléctricas, los pines del encapsulado, los límites absolutos máximos y la descripción general de los módulos periféricos.
+   · Enlace: https://www.infineon.com/dgdl/Infineon-XC164CM-XC167CM-XC164LM-DS-v02_00-EN.pdf?fileId=db3a304412b407950112b409e7640009
+2. Peripheral Units Manual (Manual de Unidades Periféricas):
+   · Este manual es crucial para programar los periféricos específicos como GPT (Timers), CAPCOM, ADC, USART, etc.
+   · Título: XC800 Family / C166SV2 Peripheral Units Manual
+   · Número: UM01002
+   · Enlace: https://www.infineon.com/dgdl/Infineon-UM01002-XC800_Family_C166SV2_Peripheral_Units_Manual-UM-v02_00-EN.pdf?fileId=db3a304412b407950112b409f0e0000b
+
+---
+
+Resumen del Conjunto de Instrucciones (Instruction Set)
+
+El núcleo C166v2 del XC164 tiene un conjunto de instrucciones RISC de 16 bits muy eficiente. Algunas de sus características clave son:
+
+· Arquitectura de Registro: Cuenta con 16 registros de propósito general (R0, R1, ..., R15).
+· Modos de Direccionamiento: Soporta múltiples modos, incluido direccionamiento por registros, indirecto, inmediato, de desplazamiento y absoluto.
+· Operaciones Aritméticas: Sumas, restas, multiplicaciones (16x16->32 bits y 32x16->48 bits), divisiones (32/16->16 bits).
+· Operaciones Lógicas: AND, OR, XOR, etc.
+· Operaciones de Bit (Bit-Bandling): Muy potentes para controlar puertos E/S. Puede setear, limpiar y testear bits individuales en la memoria con instrucciones simples.
+· Operaciones de Shift y Rotate.
+· Instrucciones de Salto: Saltos condicionales e incondicionales, llamadas a subrutinas (CALL).
+
+Cómo Buscar en el Sitio de Infineon si los Enlaces Fallan
+
+1. Ve a www.infineon.com
+2. En la barra de búsqueda, escribe el número del documento (ej: UM01001 o XC164-DS).
+3. Filtra los resultados por "Documentos".
+4. Selecciona el manual correcto de la lista.
+
+Nota importante: El XC164 y toda la familia C166 son considerados productos "Legacy & End-of-Life" por Infineon. La documentación sigue disponible, pero el soporte activo y los componentes nuevos pueden ser difíciles de conseguir. Infineon recomienda migrar a sus familias más modernas como los AURIX™ o XMC para nuevos diseños.
