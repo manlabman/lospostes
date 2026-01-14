@@ -1,0 +1,125 @@
+Configurar los niveles de arranque en Linux depende de si tu sistema usa el sistema de inicio tradicional SysV init o el moderno systemd. Aquí tienes una guía completa para ambos.
+
+📊 ¿SysV init o systemd?
+
+Antes de empezar, identifica qué sistema usa tu distribución. Los comandos y archivos son diferentes.
+
+SysV init (Distribuciones más antiguas):
+
+· Niveles de ejecución: Usa números del 0 al 6 .
+· Configuración por defecto: Archivo /etc/inittab .
+· Comando para gestionar servicios: service o scripts en /etc/init.d/ .
+
+systemd (Distribuciones modernas: Ubuntu 15.04+, RHEL/CentOS 7+, Debian 8+, etc.):
+
+· "Targets" (objetivos): Reemplazan a los niveles numéricos (ej., multi-user.target para consola, graphical.target para interfaz gráfica) .
+· Configuración por defecto: Se establece con systemctl set-default.
+· Comando principal: systemctl .
+
+Para verificar cuál usas, ejecuta este comando y revisa la salida:
+
+```bash
+ps -p 1 -o comm=
+```
+
+· Si muestra init o systemd, ya sabes qué sistema usar.
+· Si muestra systemd, también puedes usar systemctl get-default para ver tu "target" actual .
+
+⚙️ Configuración en sistemas SysV init
+
+1. Ver el nivel de ejecución actual
+Usa uno de estos comandos:
+
+```bash
+who -r
+```
+
+```bash
+runlevel
+```
+
+2. Cambiar al nivel de ejecución temporalmente
+Usa el comando init o telinit, seguido del número del nivel .
+
+```bash
+sudo init 3  # Cambia a modo multiusuario sin gráficos (nivel 3)
+```
+
+```bash
+sudo telinit 5  # Cambia a modo gráfico (nivel 5)
+```
+
+⚠️ Advertencia: Los niveles 0 (apagado), 1 (monousuario/mantenimiento) y 6 (reinicio) detendrán servicios. Usa sudo init 6 para reiniciar, o sudo init 0 para apagar .
+
+3. Configurar el nivel de ejecución por defecto
+Edita el archivo /etc/inittab como superusuario. Busca la línea que comienza con id: y cambia el número .
+
+```bash
+sudo nano /etc/inittab
+# Busca y modifica la línea. Por ejemplo, para arrancar en consola (nivel 3):
+# id:3:initdefault:
+```
+
+❗ Importante: Nunca establezcas 0 o 6 como initdefault, o el sistema se apagará o reiniciará continuamente .
+
+🚀 Configuración en sistemas con systemd
+
+1. Ver el "target" (objetivo) actual y por defecto
+
+```bash
+systemctl get-default
+```
+
+2. Cambiar al "target" temporalmente
+Usa systemctl isolate .
+
+```bash
+sudo systemctl isolate multi-user.target  # Cambia a consola (equivalente a nivel 3)
+```
+
+```bash
+sudo systemctl isolate graphical.target   # Cambia a interfaz gráfica (equivalente a nivel 5)
+```
+
+Para modos de mantenimiento o emergencia:
+
+```bash
+sudo systemctl rescue      # Modo rescate (monousuario básico)
+```
+
+```bash
+sudo systemctl emergency   # Modo emergencia (mínima inicialización)
+```
+
+3. Configurar el "target" de arranque por defecto
+
+```bash
+sudo systemctl set-default multi-user.target  # Arranque en consola
+```
+
+```bash
+sudo systemctl set-default graphical.target   # Arranque en interfaz gráfica
+```
+
+🛠️ Cambiar el modo en el momento del arranque (GRUB)
+
+Puedes forzar un modo específico al iniciar el sistema, útil para resolver problemas .
+
+1. En el menú de GRUB, presiona e para editar la entrada de arranque.
+2. En la línea que comienza con linux, al final de los parámetros, añade:
+   · Para SysV init: 3 (consola) o 5 (gráfico) .
+   · Para systemd: systemd.unit=multi-user.target (consola) o systemd.unit=graphical.target (gráfico) .
+3. Presiona Ctrl+X o F10 para arrancar con esos parámetros (el cambio es solo para esta sesión).
+
+💡 Consejos prácticos
+
+· Eliminar un servicio de un nivel (SysV init): Borra o renombra el enlace simbólico en el directorio /etc/rcN.d/ (donde N es el número del nivel). Nunca borres el script original de /etc/init.d/ .
+· Habilitar/deshabilitar un servicio al arranque (systemd): Usa sudo systemctl enable nombre_servicio o sudo systemctl disable nombre_servicio .
+· Notificar a otros usuarios: Antes de cambiar a un nivel que afecte servicios (como 0, 1, 6 o rescue), usa el comando wall para enviar un mensaje a todos .
+
+🤔 ¿En qué puedo ayudarte ahora?
+
+Para darte instrucciones más específicas, sería útil saber:
+
+· ¿Qué distribución y versión de Linux usas?
+· ¿Tu objetivo es arrancar siempre en modo consola (para un servidor), solucionar un problema con la interfaz gráfica o personalizar qué servicios se inician?
