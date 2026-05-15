@@ -1,1 +1,26 @@
 
+El formato RAR tiene dos grandes versiones con diferencias técnicas importantes: la clásica (RAR 1.5 a 4.x) y la moderna (RAR 5.0 en adelante).
+
+Aquí te detallo sus especificaciones técnicas clave:
+
+· Límite de tamaño: El archivo puede llegar hasta 8 exabytes (9.22 mil millones de GB).
+· Firma (Magic Number): Identifica el tipo de archivo. La versión antigua usa 52 61 72 21 1A 07 00 (7 bytes) y la versión 5.0 usa 52 61 72 21 1A 07 01 00 (8 bytes).
+· Compresión: Utiliza algoritmos como LZSS, PPMd y predicción por coincidencia parcial. En RAR5, la memoria de diccionario puede llegar hasta 1 GB.
+· Encriptación: La versión 5.0 implementa estándar AES-256 (la anterior era AES-128), combinado con PBKDF2 para derivación de claves.
+· Corrección de errores: Permite añadir "registros de recuperación" (Recovery Records) usando tecnología de corrección Reed-Solomon.
+· Integridad de datos: Usa checksums CRC32 (32 bits) en RAR4 y permite usar BLAKE2sp (256 bits) para mayor fiabilidad en RAR5.
+· Nombres de archivo: RAR5 soporta rutas de hasta 2,048 caracteres codificados en UTF-8.
+· Extensión: Principalmente .rar. En archivos multi-volumen suele usar .part1.rar, .part2.rar, etc. (o los antiguos .r00, .r01).
+
+🔍 Estructura Interna de un Archivo RAR 5.0
+
+Un archivo RAR se organiza como una secuencia lineal de bloques. En la práctica, su estructura suele verse así:
+
+1. Módulo SFX (Opcional): Si es autoextraíble, contiene el código ejecutable al inicio.
+2. Cabecera de Encriptación: Presente si los headers del archivo están cifrados.
+3. Cabecera Principal: Contiene metadatos globales (versión, flags).
+4. Bloques de Archivos: Por cada archivo comprimido, se almacena su CRC, tamaño, nombre y los datos en sí.
+5. Registro de Recuperación: Herramienta de corrección de errores.
+6. Cabecera de Cierre: Marca el final formal del archivo.
+
+¿Hay algo más específico que quieras saber, como las diferencias exactas entre las cabeceras de RAR4 y RAR5?
