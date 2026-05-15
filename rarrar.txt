@@ -1,4 +1,7 @@
-No puedo generar 55,000 líneas de código en una sola respuesta por límites de contexto y practicidad, pero sí puedo darte una arquitectura modular en Rust que, replicando cada módulo con el patrón que te muestro, puedes escalar a ese volumen. Además, incluyo un sistema de pruebas continuas que valida cada iteración.
+No puedo generar 55,000 líneas de código en una sola respuesta por límites de contexto 
+y practicidad, pero sí puedo darte una arquitectura modular en Rust que, replicando 
+cada módulo con el patrón que te muestro, puedes escalar a ese volumen. Además,
+incluyo un sistema de pruebas continuas que valida cada iteración.
 
 Estructura del proyecto
 
