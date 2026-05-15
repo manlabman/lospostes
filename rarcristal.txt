@@ -1,0 +1,78 @@
+Para materializar un proyecto de esta magnitud (un compresor RAR en Rust con pruebas continuas), necesitas configurar un ecosistema de herramientas que abarque desde la máquina local hasta la integración continua. Aquí tienes los elementos necesarios desglosados.
+
+---
+
+💻 1. Equipo de Desarrollo (Hardware)
+
+Aunque Rust es eficiente, compilar un proyecto de 55k líneas y ejecutar pruebas continuas exige un equipo sólido.
+
+· Procesador (CPU): Un Intel Core i7/i9 o AMD Ryzen 7/9 (con al menos 8 núcleos físicos) es ideal. La compilación en Rust y los tests se benefician enormemente del paralelismo.
+· Memoria RAM: 16 GB como mínimo, aunque 32 GB te darán un margen muy cómodo. Las operaciones de compresión/decompresión para pruebas con archivos grandes (GB) y la gestión del diccionario consumirán memoria .
+· Almacenamiento: Un SSD NVMe de 512 GB o más. La velocidad de lectura/escritura es crucial para los ciclos de prueba, la caché de Cargo y los binarios generados.
+· Sistema Operativo: Cualquier sistema donde corra Rust (Windows, macOS, Linux). Linux (o WSL2 en Windows) suele ofrecer el mejor rendimiento para este tipo de herramientas de sistema.
+
+🛠️ 2. Software Base y Dependencias
+
+La base de todo es el toolchain de Rust y las librerías que implementan los algoritmos que mencionamos antes.
+
+Lenguaje y Herramientas Base:
+
+· Rust (v1.70+): Instálalo vía rustup.
+· Cargo: El gestor de paquetes y build system de Rust, se instala automáticamente con rustup.
+· Git: Indispensable para el control de versiones.
+
+Dependencias Clave (Cargo.toml necesitas añadir):
+
+· lzss o lzzzz: Para el núcleo del algoritmo de compresión LZSS (el que usa RAR).
+· aes y pbkdf2: Para implementar el cifrado AES-256 (estándar en RAR5) .
+· crc, blake2: Para los checksums y firmas de integridad.
+· reed-solomon-erasure: Para crear los "Recovery Records" (códigos de corrección de errores).
+· rayon: Para paralelizar la compresión y las pruebas fácilmente.
+· clap o structopt: Para construir la interfaz de línea de comandos (CLI).
+· notify (crate): Para implementar el watcher de archivos que detecta cambios y dispara la prueba continua en local.
+
+⚙️ 3. Infraestructura de Pruebas Continuas (CI/CD)
+
+Tu objetivo es un ciclo "alerta -> prueba -> valida". Esto se logra con sistemas de Integración Continua.
+
+Plataforma Principal (CI):
+
+· GitHub Actions: Es la opción más directa si usas GitHub. Tiene una excelente integración con Rust, permite ejecutar tests en matrices (múltiples SO y versiones de Rust) y es gratis para proyectos públicos .
+· GitLab CI / Jenkins (Alternativas): GitLab ofrece gran flexibilidad con sus pipelines , y Jenkins es el clásico si prefieres control total sobre los servidores.
+
+Pasos Esenciales en el Pipeline (CI):
+El pipeline debe ejecutarse en cada commit o Pull Request. Su trabajo es el siguiente:
+
+1. Checkout: Descargar el código.
+2. Cacheo: Guardar la carpeta target/ y el registry de Cargo. Esto es vital, reduce el tiempo de compilación de minutos a segundos .
+3. Linting y Formato: Ejecutar cargo fmt --check (para el estilo del código) y cargo clippy (para encontrar errores comunes). Fallan el pipeline si hay advertencias.
+4. Pruebas (Tests): Ejecutar cargo test para correr todas las pruebas unitarias y de integración en un entorno limpio .
+5. Compilación: Verificar que cargo build --release funciona en los objetivos principales (Linux, Windows, macOS).
+6. Seguridad: Usar cargo audit para escanear dependencias en busca de vulnerabilidades conocidas .
+
+🧠 4. Metodología de Desarrollo Asistido por IA
+
+Para llegar a 55k líneas de manera eficiente y mantener la calidad, puedes apoyarte en herramientas de IA.
+
+Haz que la IA trabaje para ti:
+
+· Generación de código repetitivo: Úsala para generar los mocks de pruebas, los diferentes niveles de compresión o las estructuras de los comandos de la CLI.
+· Refactorización: Pídele que te ayude a aplicar las sugerencias de Clippy o a optimizar el uso de memoria en un bucle.
+· Generación de documentación y pruebas: Es muy útil para crear automáticamente los tests de integración iniciales o la documentación de los módulos .
+
+Puntos clave a vigilar:
+
+· El 5% crítico: El código generado por IA suele pasar la mayoría de pruebas, pero ese 5% restante (edge cases, seguridad, gestión de errores) es el que más duele encontrar. La revisión manual es obligatoria .
+· Especificaciones técnicas: Para que la IA genere algo útil, debes proporcionarle el contexto correcto (por ejemplo, "implementa la estructura de cabecera del bloque RAR5 con los flags de solid archive").
+
+📋 Resumen Rápido: Lista de Verificación
+
+Para que no se te olvide nada, aquí tienes la checklist final:
+
+· Hardware: CPU multinúcleo, 32GB RAM, SSD.
+· Software: Instalar rustup, Git, y tu editor favorito (VS Code con rust-analyzer es la mejor opción).
+· Dependencias: Añadir lzss, aes, rayon, etc. al Cargo.toml.
+· CI/CD: Configurar el archivo .github/workflows/ci.yml con cargo test y cargo clippy (y no olvides el caché).
+· Metodología: Usar la IA para generar código repetitivo, pero revisa y prueba el 100% de lo que integres.
+
+¿Tienes ya decidido si usarás GitHub Actions o prefieres otro sistema de CI? Eso definirá cómo escribo los próximos ejemplos de pipeline.
